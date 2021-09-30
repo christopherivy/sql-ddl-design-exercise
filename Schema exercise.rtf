@@ -1,0 +1,296 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2513
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\margl1440\margr1440\vieww9080\viewh13640\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 //// -- LEVEL 1\
+//// -- Tables and References\
+\
+// Creating tables\
+Table users as U \{\
+  id int [pk, increment] // auto-increment\
+  full_name varchar\
+  created_at timestamp\
+  country_code int\
+\}\
+\
+Table countries \{\
+  code int [pk]\
+  first_name varchar\
+  last_name varchar\
+ \}\
+\
+// Creating references\
+// You can also define relaionship separately\
+// > many-to-one; < one-to-many; - one-to-one\
+Ref: U.country_code > countries.code  \
+Ref: merchants.country_code > countries.code\
+\
+//----------------------------------------------//\
+\
+//// -- LEVEL 2\
+//// -- Adding column settings\
+\
+Table order_items \{\
+  order_id int [ref: > orders.id] // inline relationship (many-to-one)\
+  product_id int\
+  quantity int [default: 1] // default value\
+\}\
+\
+Ref: order_items.product_id > products.id\
+\
+Table orders \{\
+  id int [pk] // primary key\
+  user_id int [not null, unique]\
+  status varchar\
+  created_at varchar [note: 'When order created'] // add column note\
+\}\
+\
+//----------------------------------------------//\
+\
+//// -- Level 3 \
+//// -- Enum, Indexes\
+\
+// Enum for 'products' table below\
+Enum products_status \{\
+  out_of_stock\
+  in_stock\
+  running_low [note: 'less than 20'] // add column note\
+\}\
+\
+// Indexes: You can define a single or multi-column index \
+Table products \{\
+  id int [pk]\
+  name varchar\
+  merchant_id int [not null]\
+  price int\
+  status products_status\
+  created_at datetime [default: `now()`]\
+  \
+  Indexes \{\
+    (merchant_id, status) [name:'product_status']\
+    id [unique]\
+  \}\
+\}\
+\
+Table merchants \{\
+  id int\
+  country_code int\
+  merchant_name varchar\
+  \
+  "created at" varchar\
+  admin_id int [ref: > U.id]\
+  Indexes \{\
+    (id, country_code) [pk]\
+  \}\
+\}\
+\
+Table merchant_periods \{\
+  id int [pk]\
+  merchant_id int\
+  country_code int\
+  start_date datetime\
+  end_date datetime\
+\}\
+\
+Ref: products.merchant_id > merchants.id // many-to-one\
+//composite foreign key\
+Ref: merchant_periods.(merchant_id, country_code) > merchants.(id, country_code)\
+\
+\
+\
+\
+https://dbdiagram.io/d\
+\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\
+//Part One: Medical Center\
+\
+//Creating tables\
+Table Med_Center as MC \{\
+  id int [pk, increment]\
+  name varcharacter\
+  address varcharacter\
+  state varcharacter\
+\}\
+\
+Table Doctors as D \{\
+  id int [pk, increment]\
+  first_name varcharacter\
+  last_name varcharacter\
+  years_practicing int\
+  med_ctr_id int\
+\}\
+\
+Table Patient \{\
+  id int [pk, increment]\
+  first_name varcharacter\
+  last_name varcharacter\
+  age int\
+  gender varcharacter\
+  disease_count int\
+  med_ctr_id int\
+  doctor_id int\
+\}\
+\
+Ref: MC.id < Doctors.med_ctr_id\
+Ref: Patient.med_ctr_id > MC.id\
+\
+Ref: Doctors.id > Patient.doctor_id\
+\
+\
+\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\
+\
+//Part Two: Craigslist\
+\
+Table Craigslist as C \{\
+  region varcharacter\
+  \
+\}\
+\
+Table Users as U \{\
+  id int [pk, increment]\
+  user_region varcharacter\
+  user_post varcharacter\
+\}\
+\
+Table Post \{\
+  id int [pk, increment]\
+  post_title varcharacter\
+  post_text varcharacter\
+  created_at timestamp\
+  user_region varcharacter\
+  user_location varcharacter\
+\}\
+\
+Table Post_Category \{\
+  category_id int [pk, increment]\
+\}\
+\
+Table Categories \{\
+  id int [pk, increment]\
+\}\
+\
+\
+\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\
+\
+//Part Three: Soccer League\
+\
+//Creating tables\
+\
+Table Teams \{\
+  id integer [pk, increment]\
+  team_name varcharacter\
+  team_city varcharacter\
+  roster_count integer\
+  team_owner varcharacter\
+  team_rank integer\
+\}\
+\
+Table Coaches \{\
+  id integer [pk, increment]\
+  team varcharacter\
+  first_name varcharacter\
+  last_name varcharacter\
+  years_as_coach integer\
+\}\
+\
+Table Games_played \{\
+  id integer [pk, increment]\
+  Referees_id integer\
+  team_matchup varcharacter\
+  home_game boolean\
+  goal_time numeric\
+  who_scored varcharacter\
+  home_team_score integer\
+  away_team_score integer\
+  \
+  \}\
+  \
+\
+Table Players \{\
+  id integer [pk, increment]\
+  first_name varcharacter\
+  last_name varcharacter\
+  current_team integer\
+  \
+\}\
+\
+Table Referees \{\
+  id integer [pk, increment]\
+  first_name varcharacter\
+  last_name varcharacter\
+  ref_station varcharacter\
+\}\
+\
+\
+//unsure how to do matches between teams\
+Table Matches \{\
+  id integer [pk, increment]\
+  \
+\}\
+\
+\
+\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\
+SONGS EXERCISE\
+//Part One: Medical Center\
+\
+//Creating tables\
+\
+\
+\
+Table songs \{\
+  id integer [pk, increment]\
+  song_title text\
+  duration_in_seconds integer\
+  release_date datetime\
+  artist_id integer\
+  album_id integer\
+  producer_id integer\
+\}\
+\
+Table albums \{\
+  id int [pk, increment]\
+  release_date datetime\
+  album_artist_id integer\
+\}\
+\
+Table artists \{\
+  id integer [pk, increment]\
+  artist_id integer\
+  artist_name text\
+\
+\}\
+\
+Table producers \{\
+  id integer [pk, increment]\
+  producer_id integer\
+  producer_name text\
+  song_id integer\
+\}\
+\
+Table songs_artists \{\
+  id integer [pk, increment]\
+  artist_id datetime\
+  song_id integer\
+\}\
+\
+Table songs_producers \{\
+  id integer [pk, increment]\
+  song_id integer\
+  producer_id integer\
+\}\
+\
+\
+Ref: albums.id < songs.album_id\
+\
+Ref: songs.id < songs_artists.song_id\
+\
+Ref: artists.id < songs.artist_id\
+\
+\
+\
+Ref: songs.producer_id < producers.id\
+\
+\
+}
